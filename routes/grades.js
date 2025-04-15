@@ -1,4 +1,4 @@
-let {Grade, Student, Course} = require('../model/schemas');
+let { Grade } = require('../model/schemas');
 
 function getAll(req, res) {
     Grade.find()
@@ -7,8 +7,19 @@ function getAll(req, res) {
         .then((grades) => {
             res.send(grades);
         }).catch((err) => {
-        res.send(err);
-    });
+            res.send(err);
+        });
+}
+
+function getGradesByStudent(req, res) {
+    Grade.find({ student: req.params.id })
+        .populate('student')
+        .populate('course')
+        .then((grades) => {
+            res.send(grades);
+        }).catch((err) => {
+            res.send(err);
+        });
 }
 
 
@@ -22,12 +33,28 @@ function create(req, res) {
 
     grade.save()
         .then((grade) => {
-                res.json({message: `grade saved with id ${grade.id}!`});
-            }
+            res.json({ message: `grade saved with id ${grade.id}!` });
+        }
         ).catch((err) => {
-        console.log(err);
-        res.status(400).send('cant post grade ', err.message);
+            console.log(err);
+            res.status(400).send('cant post grade ', err.message);
+        });
+}
+
+function update(req, res) {
+    Grade.findByIdAndUpdate(req.params.id, req.body).then((grade) => {
+        res.json({ message: `grade updated with id ${grade.id}!` });
+    }).catch((err) => {
+        res.send('cant update grade ', err);
     });
 }
 
-module.exports = {getAll, create};
+function deleteGrade(req, res) {
+    Grade.findByIdAndDelete(req.params.id).then((grade) => {
+        res.json({ message: `grade deleted with id ${grade.id}!` });
+    }).catch((err) => {
+        res.send('cant delete grade ', err);
+    });
+}
+
+module.exports = { getAll, getGradesByStudent, create, update, deleteGrade };
