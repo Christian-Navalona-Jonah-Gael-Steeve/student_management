@@ -4,20 +4,22 @@ let bodyParser = require('body-parser');
 let student = require('./routes/students');
 let course = require('./routes/courses');
 let grade = require('./routes/grades');
+let process = require('process');
+require('dotenv').config();
+
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
 
 // TODO remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud
-const uri = '...';
-
+const uri = process.env.MONGODB_URI;
 const options = {};
 
 mongoose.connect(uri, options)
     .then(() => {
-            console.log("Connexion à la base OK");
-        },
+        console.log("Connexion à la base OK");
+    },
         err => {
             console.log('Erreur de connexion: ', err);
         });
@@ -31,7 +33,7 @@ app.use(function (req, res, next) {
 });
 
 // Pour les formulaires
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 let port = process.env.PORT || 8010;
