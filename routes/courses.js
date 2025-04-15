@@ -1,4 +1,4 @@
-let {Course} = require('../model/schemas');
+let { Course } = require('../model/schemas');
 
 function getAll(req, res) {
     Course.find().then((classes) => {
@@ -16,11 +16,29 @@ function create(req, res) {
 
     course.save()
         .then((course) => {
-                res.json({message: `course saved with id ${course.id}!`});
-            }
+            res.json({ message: `course saved with id ${course.id}!` });
+        }
         ).catch((err) => {
-        res.send('cant post course ', err);
+            res.send('cant post course ', err);
+        });
+}
+
+function update(req, res) {
+    console.log("req.params.id", req.params.id)
+    Course.findByIdAndUpdate(req.params.id, req.body).then((course) => {
+        res.json({ message: `course updated with id ${course.id}!` });
+    }).catch((err) => {
+        res.send('cant update course ', err);
     });
 }
 
-module.exports = {getAll, create};
+function deleteCourse(req, res) {
+    Course.findByIdAndDelete(req.params.id).then((course) => {
+        res.json({ message: `course deleted with id ${course.id}!` });
+    }).catch((err) => {
+        res.send('cant delete course ', err);
+    });
+}
+
+
+module.exports = { getAll, create, deleteCourse, update };
