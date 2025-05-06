@@ -5,8 +5,16 @@ let student = require('./routes/students');
 let course = require('./routes/courses');
 let grade = require('./routes/grades');
 let process = require('process');
+let cors = require('cors');
 require('dotenv').config();
 
+app.use(cors({
+    origin: true,
+    credentials: true,
+    exposedHeaders: ["token"],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+}));
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -18,7 +26,7 @@ const options = {};
 
 mongoose.connect(uri, options)
     .then(() => {
-        console.log("Connexion à la base OK");
+        console.log("Connexion à la base mongo OK");
     },
         err => {
             console.log('Erreur de connexion: ', err);
