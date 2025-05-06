@@ -9,7 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      MONGO_URI: ${{ secrets.MONGODB_URI }}
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
       
     steps:
       - name: Checkout code
