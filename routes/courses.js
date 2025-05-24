@@ -16,7 +16,7 @@ function create(req, res) {
 
     course.save()
         .then((course) => {
-            res.json({ message: `course saved with id ${course.id}!` });
+            res.json({ message: `course saved with id ${course._id}!` });
         }
         ).catch((err) => {
             res.send('cant post course ', err);
@@ -26,7 +26,7 @@ function create(req, res) {
 function update(req, res) {
     console.log("req.params.id", req.params.id)
     Course.findByIdAndUpdate(req.params.id, req.body).then((course) => {
-        res.json({ message: `course updated with id ${course.id}!` });
+        res.json({ message: `course updated with id ${course._id}!` });
     }).catch((err) => {
         res.send('cant update course ', err);
     });
@@ -34,7 +34,7 @@ function update(req, res) {
 
 function deleteCourse(req, res) {
     Course.findByIdAndDelete(req.params.id).then((course) => {
-        res.json({ message: `course deleted with id ${course.id}!` });
+        res.json({ message: `course deleted with id ${course._id}!` });
     }).catch((err) => {
         res.send('cant delete course ', err);
     });
