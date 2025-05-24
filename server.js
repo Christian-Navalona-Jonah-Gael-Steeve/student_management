@@ -1,3 +1,4 @@
+require('dotenv').config();
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
@@ -5,8 +6,10 @@ let student = require('./routes/students');
 let course = require('./routes/courses');
 let grade = require('./routes/grades');
 let process = require('process');
+const { protect } = require('./middlewares/authMiddleware')
+const errorMiddleware = require('./middlewares/errorMiddleware')
+const authRoutes = require('./routes/auth')
 let cors = require('cors');
-require('dotenv').config();
 
 app.use(cors({
     origin: true,
@@ -22,6 +25,7 @@ mongoose.Promise = global.Promise;
 
 // TODO remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud
 const uri = process.env.MONGODB_URI;
+console.log("ACCESS_TOKEN_SECRET", process.env.ACCESS_TOKEN_SECRET)
 const options = {};
 
 mongoose.connect(uri, options)
@@ -49,6 +53,10 @@ let port = process.env.PORT || 8010;
 // les routes
 const prefix = '/api';
 
+
+
+app.use(prefix + '/auth', authRoutes)
+
 app.route(prefix + '/students')
     .get(student.getAll)
     .post(student.create)
@@ -74,6 +82,8 @@ app.route(prefix + '/grades/:id')
     .get(grade.getGradesByStudent)
     .put(grade.update)
     .delete(grade.deleteGrade);
+
+app.use(errorMiddleware)
 
 // On démarre le serveur
 app.listen(port, "0.0.0.0");
