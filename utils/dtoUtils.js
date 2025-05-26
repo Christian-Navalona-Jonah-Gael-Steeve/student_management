@@ -6,8 +6,22 @@ const toStudentDto = (user) => {
         lastName,
         email
     }
-}
+};
+
+const toUserDto = (user) => {
+    const { _id, firstName, lastName, email, isActive, isVerified, role } = user;
+    return {
+        _id,
+        firstName,
+        lastName,
+        email,
+        isActive,
+        isVerified,
+        role
+    };
+};
 
 module.exports = {
+    toUserDto,
     toStudentDto,
 }
