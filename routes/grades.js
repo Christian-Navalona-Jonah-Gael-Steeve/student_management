@@ -33,7 +33,7 @@ function create(req, res) {
 
     grade.save()
         .then((grade) => {
-            res.json({ message: `grade saved with id ${grade.id}!` });
+            res.json({ message: `grade saved with id ${grade._id}!` });
         }
         ).catch((err) => {
             console.log(err);
@@ -43,7 +43,7 @@ function create(req, res) {
 
 function update(req, res) {
     Grade.findByIdAndUpdate(req.params.id, req.body).then((grade) => {
-        res.json({ message: `grade updated with id ${grade.id}!` });
+        res.json({ message: `grade updated with id ${grade._id}!` });
     }).catch((err) => {
         res.send('cant update grade ', err);
     });
@@ -51,7 +51,7 @@ function update(req, res) {
 
 function deleteGrade(req, res) {
     Grade.findByIdAndDelete(req.params.id).then((grade) => {
-        res.json({ message: `grade deleted with id ${grade.id}!` });
+        res.json({ message: `grade deleted with id ${grade._id}!` });
     }).catch((err) => {
         res.send('cant delete grade ', err);
     });
