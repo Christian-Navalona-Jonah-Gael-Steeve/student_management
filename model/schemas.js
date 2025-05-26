@@ -64,13 +64,13 @@ const CourseSchema = Schema({
 
 let Course = mongoose.model('Course', CourseSchema);
 
-let gradeSchema = Schema({
-    student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
-    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
-    grade: Number,
-    date: String,
+const GradeSchema = Schema({
+  student: { type: mongoose.Schema.Types.ObjectId, ref: "Student" },
+  course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+  grade: Number,
+  date: String,
 });
-let Grade = mongoose.model('Grade', gradeSchema);
+const Grade = mongoose.model("Grade", GradeSchema);
 
 // Exports the modeles
 module.exports = {
