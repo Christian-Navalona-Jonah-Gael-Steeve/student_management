@@ -1,6 +1,6 @@
 const Roles = require('../constants/roles')
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 
 const UserSchema = Schema(
   {
@@ -47,6 +47,12 @@ UserSchema.statics.findByEmail = function (email) {
 
 const User = mongoose.model("User", UserSchema);
 
+// ----------------------
+// Discriminators
+// ----------------------
+const Admin = User.discriminator(Roles.ADMIN, new Schema({}));
+const Scolarite = User.discriminator(Roles.SCOLARITE, new Schema({}));
+
 // Student schema extending UserSchema (for future extensibility)
 const StudentSchema = Schema({});
 const Student = User.discriminator(Roles.STUDENT, StudentSchema);
@@ -55,20 +61,21 @@ const CourseSchema = Schema({
   name: String,
   code: String,
 });
-const Course = mongoose.model("Course", CourseSchema);
 
-const GradeSchema = Schema({
-  student: { type: mongoose.Schema.Types.ObjectId, ref: "Student" },
-  course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
-  grade: Number,
-  date: String,
+let Course = mongoose.model('Course', CourseSchema);
+
+let gradeSchema = Schema({
+    student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
+    grade: Number,
+    date: String,
 });
-const Grade = mongoose.model("Grade", GradeSchema);
+let Grade = mongoose.model('Grade', gradeSchema);
 
 // Exports the modeles
 module.exports = {
-  User,
-  Student,
-  Course,
-  Grade,
-};
+    Student: Student,
+    Course: Course,
+    Grade: Grade,
+    User: User,
+}
