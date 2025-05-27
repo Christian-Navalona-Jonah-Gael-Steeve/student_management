@@ -2,7 +2,7 @@ let { Grade } = require('../model/schemas');
 
 function getAll(req, res) {
     Grade.find()
-        .populate('student')
+        .populate({ path: 'student', model: 'User' })  
         .populate('course')
         .then((grades) => {
             res.send(grades);
@@ -13,9 +13,13 @@ function getAll(req, res) {
 
 function getGradesByStudent(req, res) {
     Grade.find({ student: req.params.id })
-        .populate('student')
+        .populate({ path: 'student', model: 'User' })
         .populate('course')
         .then((grades) => {
+            console.log(grades);
+            if (grades.length === 0) {
+                return res.status(404).send({ message: 'No grades found for this student.' });
+            }
             res.send(grades);
         }).catch((err) => {
             res.send(err);
