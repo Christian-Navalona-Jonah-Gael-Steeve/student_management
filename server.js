@@ -17,7 +17,7 @@ app.use(cors({
     origin: true,
     credentials: true,
     exposedHeaders: ["token"],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     preflightContinue: false,
 }));
 
@@ -40,14 +40,6 @@ mongoose.connect(uri, options)
         err => {
             console.log('Erreur de connexion: ', err);
         });
-
-// Pour accepter les connexions cross-domain (CORS)
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    next();
-});
 
 // Pour les formulaires
 app.use(bodyParser.urlencoded({ extended: true }));
