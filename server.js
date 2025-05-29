@@ -33,17 +33,29 @@ mongoose.connect(uri, options)
             console.log('Erreur de connexion: ', err);
         });
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Expose-Headers","x-access-token, x-refresh-token",
-    );
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(200);
-    }
-    next();
-});
+const allowedOrigins = [
+    "https://mbds-studentmanagement-system.onrender.com",
+    "http://localhost:5173"
+];
+
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true,
+    exposedHeaders: ["x-access-token", "x-refresh-token"],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
+}));
+
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//     res.header("Access-Control-Expose-Headers","x-access-token, x-refresh-token",
+//     );
+//     if (req.method === "OPTIONS") {
+//         return res.sendStatus(200);
+//     }
+//     next();
+// });
 
 
 // Pour les formulaires
