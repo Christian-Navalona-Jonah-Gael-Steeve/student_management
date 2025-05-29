@@ -20,14 +20,13 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    }
+    credentials: true,
+    exposedHeaders: ["token"],
+    origin: "https://mbds-studentmanagement-system.onrender.com",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
 }));
+
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
