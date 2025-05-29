@@ -13,12 +13,20 @@ const errorMiddleware = require('./middlewares/errorMiddleware')
 const authRoutes = require('./routes/auth')
 let cors = require('cors');
 
+// Configure CORS to allow specific origins
+const allowedOrigins = [
+    'https://mbds-studentmanagement-system.onrender.com',
+    'http://localhost:5173'
+];
+
 app.use(cors({
-    origin: "*",
-    credentials: true,
-    exposedHeaders: ["token"],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-    preflightContinue: false,
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
 }));
 
 let mongoose = require('mongoose');
