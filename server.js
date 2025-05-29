@@ -33,36 +33,27 @@ mongoose.connect(uri, options)
             console.log('Erreur de connexion: ', err);
         });
 
-const allowedOrigins = [
-    "https://mbds-studentmanagement-system.onrender.com",
-    "http://localhost:5173"
-];
-
 app.use(cors({
-    origin: allowedOrigins,
     credentials: true,
     exposedHeaders: ["x-access-token", "x-refresh-token"],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
+    origin: "https://mbds-studentmanagement-system.onrender.com",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
 }));
-
-// app.use(function (req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-//     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//     res.header("Access-Control-Expose-Headers","x-access-token, x-refresh-token",
-//     );
-//     if (req.method === "OPTIONS") {
-//         return res.sendStatus(200);
-//     }
-//     next();
-// });
-
 
 // Pour les formulaires
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 let port = process.env.PORT || 8010;
+
+app.use(function (req, res, next) {
+    res.header(
+        "Access-Control-Allow-Headers",
+        "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
+});
 
 // les routes
 const prefix = '/api';
