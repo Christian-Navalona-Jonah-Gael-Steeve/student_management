@@ -13,21 +13,6 @@ const errorMiddleware = require('./middlewares/errorMiddleware')
 const authRoutes = require('./routes/auth')
 let cors = require('cors');
 
-// Configure CORS to allow specific origins
-const allowedOrigins = [
-    'https://mbds-studentmanagement-system.onrender.com',
-    'http://localhost:5173'
-];
-
-app.use(cors({
-    credentials: true,
-    exposedHeaders: ["token"],
-    origin: "https://mbds-studentmanagement-system.onrender.com",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue: false,
-}));
-
-
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
@@ -48,11 +33,12 @@ mongoose.connect(uri, options)
             console.log('Erreur de connexion: ', err);
         });
 
+app.use(cors());
+// Pour accepter les connexions cross-domain (CORS)
 app.use(function (req, res, next) {
-    res.header(
-        "Access-Control-Allow-Headers",
-        "x-access-token, Origin, Content-Type, Accept"
-    );
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     next();
 });
 
