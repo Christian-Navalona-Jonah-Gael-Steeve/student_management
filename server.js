@@ -13,7 +13,13 @@ const errorMiddleware = require('./middlewares/errorMiddleware')
 const authRoutes = require('./routes/auth')
 let cors = require('cors');
 
-app.use(cors())
+app.use(cors({
+    origin: "*",
+    credentials: true,
+    exposedHeaders: ["token"],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    preflightContinue: false,
+}));
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
