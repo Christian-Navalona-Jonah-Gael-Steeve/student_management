@@ -5,6 +5,7 @@ let bodyParser = require('body-parser');
 let student = require('./routes/students');
 let course = require('./routes/courses');
 let grade = require('./routes/grades');
+let emailRoutes = require('./routes/email');
 let user = require('./routes/users');
 let process = require('process');
 const { protect } = require('./middlewares/authMiddleware')
@@ -25,7 +26,7 @@ mongoose.Promise = global.Promise;
 //mongoose.set('debug', true);
 
 // TODO remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud
-const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/student_db';
+const uri = process.env.MONGODB_URI;
 console.log("ACCESS_TOKEN_SECRET", process.env.ACCESS_TOKEN_SECRET)
 const options = {
     useNewUrlParser: true,
@@ -60,6 +61,7 @@ const prefix = '/api';
 
 
 app.use(prefix + '/auth', authRoutes)
+app.use(prefix + '/mail', emailRoutes)
 
 app.route(prefix + '/students')
     .get(student.getAll)

@@ -9,6 +9,7 @@ const {
     decryptToken,
     encryptPassword,
 } = require("../utils/authUtils");
+const { sendResetPasswordEmail } = require("../utils/mailUtils")
 const { createError } = require("../utils/errorUtils");
 const { protect } = require("../middlewares/authMiddleware");
 
@@ -85,6 +86,33 @@ router.post("/verify", async (req, res, next) => {
             firstName: user.firstName,
             lastName: user.lastName,
         });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post("/send-mail", async (req, res, next) => {
+    try {
+        const { email } = req.body;
+
+        // Validate input
+        if (!email) {
+            res.status(400).json({
+                message:
+                    "L'email de l'utilisateur est requis",
+            });
+        }
+
+        // Find user
+        const user = await User.findByEmail(email);
+        if (!user) {
+            res.status(404).json({ message: "Le compte n'existe pas!" });
+        }
+
+        await sendResetPasswordEmail(user)
+
+        // Send response
+        res.status(200).json(null);
     } catch (error) {
         next(error);
     }
