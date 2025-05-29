@@ -48,6 +48,15 @@ mongoose.connect(uri, options)
             console.log('Erreur de connexion: ', err);
         });
 
+app.use(function (req, res, next) {
+    res.header(
+        "Access-Control-Allow-Headers",
+        "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
+});
+
+
 // Pour les formulaires
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
