@@ -1,0 +1,20 @@
+meta {
+  name: POST send-mail
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/mail/send-email
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "to": "iharinavalonarakotoniaina@gmail.com",
+    "subject": "POC send-mail",
+    "text": "Text text",
+    "html": "<h2>POC send-mail</h2><p>Content example</p>"
+  }
+}

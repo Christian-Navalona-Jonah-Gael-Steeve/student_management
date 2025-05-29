@@ -47,12 +47,6 @@ UserSchema.statics.findByEmail = function (email) {
 
 const User = mongoose.model("User", UserSchema);
 
-// ----------------------
-// Discriminators
-// ----------------------
-const Admin = User.discriminator(Roles.ADMIN, new Schema({}));
-const Scolarite = User.discriminator(Roles.SCOLARITE, new Schema({}));
-
 // Student schema extending UserSchema (for future extensibility)
 const StudentSchema = Schema({});
 const Student = User.discriminator(Roles.STUDENT, StudentSchema);
