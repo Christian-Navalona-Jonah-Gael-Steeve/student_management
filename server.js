@@ -1,67 +1,36 @@
 require('dotenv').config();
-let express = require('express');
-let app = express();
-let bodyParser = require('body-parser');
-let student = require('./routes/students');
-let course = require('./routes/courses');
-let grade = require('./routes/grades');
-let emailRoutes = require('./routes/email');
-let user = require('./routes/users');
-let process = require('process');
+const express = require('express');
+const bodyParser = require('body-parser');
+const student = require('./routes/students');
+const course = require('./routes/courses');
+const grade = require('./routes/grades');
+const emailRoutes = require('./routes/email');
+const user = require('./routes/users');
+const process = require('process');
 const { protect } = require('./middlewares/authMiddleware')
 const errorMiddleware = require('./middlewares/errorMiddleware')
 const authRoutes = require('./routes/auth')
-let cors = require('cors');
+const db = require('./database/db');
+const corsConfig = require('./config/corsConfig');
+const cors = require('cors');
 
-let mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-//mongoose.set('debug', true);
+const app = express();
 
-// TODO remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud
-const uri = process.env.MONGODB_URI;
-console.log("ACCESS_TOKEN_SECRET", process.env.ACCESS_TOKEN_SECRET)
-const options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-};
+// Connect to database
+db.connectDB();
 
-mongoose.connect(uri, options)
-    .then(() => {
-        console.log("Connexion à la base mongo OK");
-    },
-        err => {
-            console.log('Erreur de connexion: ', err);
-        });
-
-app.use(cors({
-    credentials: true,
-    exposedHeaders: ["x-access-token", "x-refresh-token"],
-    origin: "https://mbds-studentmanagement-system.onrender.com",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue: false,
-}));
-
-// Pour les formulaires
+// Middlewares
+app.use(cors(corsConfig));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-let port = process.env.PORT || 8010;
+const SERVER_PORT = process.env.PORT || 8010;
 
-app.use(function (req, res, next) {
-    res.header(
-        "Access-Control-Allow-Headers",
-        "x-access-token, Origin, Content-Type, Accept"
-    );
-    next();
-});
-
-// les routes
 const prefix = '/api';
 
-
-
-app.use(prefix + '/auth', authRoutes)
-app.use(prefix + '/mail', emailRoutes)
+// Routes
+app.use(`${prefix}/auth`, authRoutes)
+app.use(`${prefix}/mail`, emailRoutes)
 
 app.route(prefix + '/students')
     .get(student.getAll)
@@ -100,8 +69,8 @@ app.route(prefix + '/users/:id')
 
 app.use(errorMiddleware)
 
-// On démarre le serveur
-app.listen(port, "0.0.0.0");
-console.log('Serveur démarré sur http://localhost:' + port);
+app.listen(SERVER_PORT, '0.0.0.0', () => {
+    console.log(`🚀 Serveur démarré sur http://localhost:${SERVER_PORT}`);
+});
 
 module.exports = app;
