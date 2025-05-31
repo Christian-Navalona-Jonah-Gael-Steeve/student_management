@@ -1,0 +1,101 @@
+[
+    {
+        "firstName": "Admin",
+        "lastName": "UserAdmin",
+        "email": "namtetsuya@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "ADMIN"
+    },
+    {
+        "firstName": "Gael",
+        "lastName": "Content",
+        "email": "sambatraga@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "SCOLARITE"
+    },
+    {
+        "firstName": "Christian",
+        "lastName": "TOVO",
+        "email": "christiantovo@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "SCOLARITE"
+    },
+    {
+        "firstName": "Steeve",
+        "lastName": "Aimé",
+        "email": "steeveaime@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "STUDENT"
+    },
+    {
+        "firstName": "Jonah",
+        "lastName": "Amour",
+        "email": "jonahamour@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "STUDENT"
+    },
+    {
+        "firstName": "Aubin",
+        "lastName": "Achille",
+        "email": "achilleaubin@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "STUDENT"
+    },
+    {
+        "firstName": "Ricky",
+        "lastName": "Fort",
+        "email": "rickyfort@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "STUDENT"
+    },
+    {
+        "firstName": "Serge",
+        "lastName": "Raza",
+        "email": "sergeraza@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "STUDENT"
+    },
+    {
+        "firstName": "Sacha",
+        "lastName": "Burn",
+        "email": "sachaburn@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "STUDENT"
+    },
+    {
+        "firstName": "Rudy",
+        "lastName": "Norman",
+        "email": "rudynorman@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "STUDENT"
+    },
+    {
+        "firstName": "Rita",
+        "lastName": "Spark",
+        "email": "ritaspark@gmail.com",
+        "password": "$2a$12$hIAqnyVDFmPstTvu8gSwleTDo2t//9lWjGztNdR20FKoQ1DIyJjzq",
+        "isActive": true,
+        "isVerified": true,
+        "role": "STUDENT"
+    }
+]

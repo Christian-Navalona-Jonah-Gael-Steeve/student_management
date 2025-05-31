@@ -1,0 +1,15 @@
+meta {
+  name: GET /users
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/users
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuYW10ZXRzdXlhQGdtYWlsLmNvbSIsImVtYWlsIjoibmFtdGV0c3V5YUBnbWFpbC5jb20iLCJ1c2VySWQiOiI2ODNiNGIyYzMxMzQ1YzQzNGJmMjQ4YTEiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NDg3Mjc0MDcsImV4cCI6MTc0ODczMTAwN30.9GCeBXQgrv7T0oHnd2ImyUxL3K4PnKVCAm6PEFhvFBM
+}
