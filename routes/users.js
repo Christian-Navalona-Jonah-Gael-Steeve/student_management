@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require("../model/schemas");
-const { generatePassword, encryptPassword } = require("../utils/authUtils");
+const { generatePassword, encryptPassword, decryptToken } = require("../utils/authUtils");
 const { protect } = require("../middlewares/authMiddleware");
 const { toUserDto } = require('../utils/dtoUtils');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Get all users
 router.get('/', (req, res) => {
@@ -84,12 +86,13 @@ router.post('/link-google', protect, async (req, res, next) => {
     const { idToken } = req.body;
 
     try {
-        let token = req.token
+        let token = req.token;
         const result = decryptToken(token);
         if (!result.success) {
-            res.status(401).json({ message: result.error });
+            return res.status(401).json({ message: result.error });
         }
         const data = result.data;
+
         // Validate input
         if (!idToken) {
             throw createError(400, "Le token Google est requis");
@@ -102,8 +105,20 @@ router.post('/link-google', protect, async (req, res, next) => {
         });
 
         const payload = ticket.getPayload();
-        const { sub: googleSub } = payload;
+        const { sub: googleSub, email: googleEmail } = payload;
 
+        // Check if there is already an account linked to the same Google account
+        const existingGoogleAccount = await User.findOne({
+            $or: [{ googleSub }, { googleEmail }],
+        });
+
+        if (existingGoogleAccount) {
+            return res.status(400).json({
+                message: "Un compte est déjà lié à ce compte Google",
+            });
+        }
+
+        // Find user by ID from the access token
         const user = await User.findById(data.userId);
         if (!user) {
             throw createError(404, "Le compte utilisateur n'existe pas");
@@ -118,6 +133,7 @@ router.post('/link-google', protect, async (req, res, next) => {
 
         // Link the Google account
         user.googleSub = googleSub;
+        user.googleEmail = googleEmail;
         await user.save();
 
         res.status(200).json({
@@ -126,6 +142,7 @@ router.post('/link-google', protect, async (req, res, next) => {
             lastName: user.lastName,
             role: user.role,
             googleSub: user.googleSub,
+            googleEmail: user.googleEmail,
         });
     } catch (error) {
         next(error);
