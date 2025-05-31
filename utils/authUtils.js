@@ -28,7 +28,6 @@ const generateRefreshToken = (user) => {
 const validateToken = (token, isRefreshToken = false) => {
     try {
         const secret = isRefreshToken ? REFRESH_SECRET : ACCESS_SECRET;
-        console.log("secret", secret)
         const decoded = jwt.verify(token, secret);
         return {
             valid: true,

@@ -5,7 +5,6 @@ const { toUserDto } = require('../utils/dtoUtils');
 function getAll(req, res) {
     User.find()
         .then((users) => {
-            console.log(users);
             res.send(users.map(toUserDto));
         })
         .catch((err) => {
