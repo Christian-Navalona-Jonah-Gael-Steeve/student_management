@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Algorithme",
+        "code": "ALG",
+        "__v": 0
+    },
+    {
+        "name": "Recherche Opérationnelle",
+        "code": "RO",
+        "__v": 0
+    },
+    {
+        "name": "Web avancé",
+        "code": "WEBA",
+        "__v": 0
+    },
+    {
+        "name": "Analyse de données",
+        "code": "DA",
+        "__v": 0
+    }
+]

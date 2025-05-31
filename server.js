@@ -32,10 +32,10 @@ const prefix = '/api';
 // Routes
 app.use(`${prefix}/auth`, authRoutes)
 app.use(`${prefix}/mail`, emailRoutes)
-app.use(`${prefix}/users`, userRoutes)
-app.use(`${prefix}/students`, studentRoutes)
-app.use(`${prefix}/courses`, courseRoutes)
-app.use(`${prefix}/grades`, gradeRoutes)
+app.use(`${prefix}/users`, protect, userRoutes)
+app.use(`${prefix}/students`, protect, studentRoutes)
+app.use(`${prefix}/courses`, protect, courseRoutes)
+app.use(`${prefix}/grades`, protect, gradeRoutes)
 
 app.use(errorMiddleware)
 
