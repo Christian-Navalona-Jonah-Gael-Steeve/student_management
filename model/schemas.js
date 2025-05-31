@@ -21,6 +21,11 @@ const UserSchema = Schema(
       type: String,
       required: true,
     },
+    googleSub: {
+      type: String,
+      default: null,
+      required: false,
+    },
     isActive: {
       type: Boolean,
       default: true,

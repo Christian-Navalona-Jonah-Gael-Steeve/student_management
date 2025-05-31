@@ -12,6 +12,8 @@ const {
 const { sendResetPasswordEmail } = require("../utils/mailUtils")
 const { createError } = require("../utils/errorUtils");
 const { protect } = require("../middlewares/authMiddleware");
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Login route
 router.post("/token", async (req, res, next) => {
@@ -242,9 +244,6 @@ router.get("/me", protect, async (req, res, next) => {
         if (req.headers.authorization?.startsWith("Bearer")) {
             token = req.headers.authorization.split(" ")[1];
         }
-        if (!validateToken(token)) {
-            res.status(401).json({ message: "Le token n'est pas valide!" });
-        }
         const result = decryptToken(token);
         if (!result.success) {
             res.status(401).json({ message: result.error });
@@ -261,6 +260,116 @@ router.get("/me", protect, async (req, res, next) => {
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post('/google', async (req, res) => {
+    const { idToken } = req.body;
+
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        const { email, sub: googleSub } = payload;
+
+        let user = await User.findOne({ email });
+
+        if (user) {
+            const accessToken = generateAccessToken(user);
+            const refreshToken = generateRefreshToken(user);
+
+            return res.status(200).json({
+                user: {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    role: user.role,
+                },
+                accessToken,
+                refreshToken,
+            });
+        }
+
+        user = await User.findOne({ googleSub });
+
+        if (user) {
+            const accessToken = generateAccessToken(user);
+            const refreshToken = generateRefreshToken(user);
+
+            return res.status(200).json({
+                user: {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    role: user.role,
+                },
+                accessToken,
+                refreshToken,
+            });
+        }
+
+        // If no match found, return error
+        return res.status(404).json({
+            message: `Aucun compte n'est lié à ce compte Google`,
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({ message: 'Token Google non valide' });
+    }
+});
+
+router.post('/link-google', protect, async (req, res, next) => {
+    const { idToken } = req.body;
+
+    try {
+        let token = req.token
+        const result = decryptToken(token);
+        if (!result.success) {
+            res.status(401).json({ message: result.error });
+        }
+        const data = result.data;
+        // Validate input
+        if (!idToken) {
+            throw createError(400, "Le token Google est requis");
+        }
+
+        // Verify Google ID token
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        const { sub: googleSub } = payload;
+
+        const user = await User.findById(data.userId);
+        if (!user) {
+            throw createError(404, "Le compte utilisateur n'existe pas");
+        }
+
+        // Check if the account is already linked
+        if (user.googleSub) {
+            return res.status(400).json({
+                message: "Le compte utilisateur est déjà lié à un compte Google",
+            });
+        }
+
+        // Link the Google account
+        user.googleSub = googleSub;
+        await user.save();
+
+        res.status(200).json({
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+            googleSub: user.googleSub,
         });
     } catch (error) {
         next(error);

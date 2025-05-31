@@ -16,7 +16,6 @@ function getGradesByStudent(req, res) {
         .populate({ path: 'student', model: 'User' })
         .populate('course')
         .then((grades) => {
-            console.log(grades);
             if (grades.length === 0) {
                 return res.status(404).send({ message: 'No grades found for this student.' });
             }

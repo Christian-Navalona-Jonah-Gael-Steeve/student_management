@@ -5,7 +5,6 @@ const { toStudentDto } = require('../utils/dtoUtils')
 function getAll(req, res) {
     Student.find()
         .then((students) => {
-            console.log('students', students)
             res.send(students.map(toStudentDto));
         })
         .catch((err) => {

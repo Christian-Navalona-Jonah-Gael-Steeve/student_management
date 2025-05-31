@@ -24,7 +24,6 @@ function create(req, res) {
 }
 
 function update(req, res) {
-    console.log("req.params.id", req.params.id)
     Course.findByIdAndUpdate(req.params.id, req.body).then((course) => {
         res.json({ message: `course updated with id ${course._id}!` });
     }).catch((err) => {
