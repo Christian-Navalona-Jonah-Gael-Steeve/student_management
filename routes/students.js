@@ -1,8 +1,11 @@
+const express = require('express');
+const router = express.Router();
 const { Student, User } = require("../model/schemas");
 const { generatePassword, encryptPassword } = require("../utils/authUtils");
-const { toStudentDto } = require('../utils/dtoUtils')
+const { toStudentDto } = require('../utils/dtoUtils');
 
-function getAll(req, res) {
+// Get all students
+router.get('/', (req, res) => {
     Student.find()
         .then((students) => {
             res.send(students.map(toStudentDto));
@@ -10,9 +13,10 @@ function getAll(req, res) {
         .catch((err) => {
             res.status(500).json({ message: "Erreur lors de la récupération des étudiants" });
         });
-}
+});
 
-function getStudentById(req, res) {
+// Get student by ID
+router.get('/:id', (req, res) => {
     Student.findById(req.params.id)
         .then((student) => {
             if (!student) {
@@ -23,9 +27,10 @@ function getStudentById(req, res) {
         .catch((err) => {
             res.status(500).json({ message: "Erreur lors de la récupération de l'étudiant" });
         });
-}
+});
 
-async function create(req, res) {
+// Create a new student
+router.post('/', async (req, res) => {
     const { firstName, lastName, email } = req.body;
 
     // Check if user already exists
@@ -46,10 +51,11 @@ async function create(req, res) {
     });
 
     res.status(201).json(toStudentDto(student));
-}
+});
 
-function update(req, res) {
-    Student.findByIdAndUpdate(req.params.id, req.body)
+// Update a student
+router.put('/:id', (req, res) => {
+    Student.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
         .then((student) => {
             if (!student) {
                 return res.status(404).json({ message: "Étudiant non trouvé" });
@@ -59,9 +65,10 @@ function update(req, res) {
         .catch((err) => {
             res.status(500).json({ message: "Erreur lors de la mise à jour de l'étudiant" });
         });
-}
+});
 
-function deleteStudent(req, res) {
+// Delete a student
+router.delete('/:id', (req, res) => {
     Student.findByIdAndDelete(req.params.id)
         .then((student) => {
             if (!student) {
@@ -72,6 +79,6 @@ function deleteStudent(req, res) {
         .catch((err) => {
             res.status(500).json({ message: "Erreur lors de la suppression de l'étudiant" });
         });
-}
+});
 
-module.exports = { getAll, getStudentById, create, update, deleteStudent };
+module.exports = router;
