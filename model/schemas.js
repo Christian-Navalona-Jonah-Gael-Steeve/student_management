@@ -26,6 +26,11 @@ const UserSchema = Schema(
       default: null,
       required: false,
     },
+    googleEmail: {
+      type: String,
+      default: null,
+      required: false,
+    },
     isActive: {
       type: Boolean,
       default: true,
