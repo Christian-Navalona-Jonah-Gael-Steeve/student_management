@@ -9,7 +9,7 @@ const toStudentDto = (user) => {
 };
 
 const toUserDto = (user) => {
-    const { _id, firstName, lastName, email, isActive, isVerified, role } = user;
+    const { _id, firstName, lastName, email, isActive, isVerified, role, googleSub, googleEmail } = user;
     return {
         _id,
         firstName,
@@ -17,7 +17,9 @@ const toUserDto = (user) => {
         email,
         isActive,
         isVerified,
-        role
+        role,
+        googleSub,
+        googleEmail
     };
 };
 
