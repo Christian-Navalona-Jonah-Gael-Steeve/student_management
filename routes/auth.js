@@ -13,6 +13,7 @@ const { sendResetPasswordEmail } = require("../utils/mailUtils")
 const { createError } = require("../utils/errorUtils");
 const { protect } = require("../middlewares/authMiddleware");
 const { OAuth2Client } = require('google-auth-library');
+const { toUserDto } = require("../utils/dtoUtils");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Login route
@@ -48,12 +49,7 @@ router.post("/token", async (req, res, next) => {
 
         // Send response
         res.status(200).json({
-            user: {
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                role: user.role,
-            },
+            user: toUserDto(user),
             accessToken,
             refreshToken,
         });
@@ -83,11 +79,7 @@ router.post("/verify", async (req, res, next) => {
         }
 
         // Send response
-        res.status(200).json({
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-        });
+        res.status(200).json(toUserDto(user));
     } catch (error) {
         next(error);
     }
@@ -156,19 +148,22 @@ router.post("/validate", async (req, res, next) => {
         await user.save();
 
         // Send response
-        res.status(200).json({
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-        });
+        res.status(200).json(toUserDto(user));
     } catch (error) {
         next(error);
     }
 });
 
-router.post("/reset-password", async (req, res, next) => {
+router.post("/reset-password", protect, async (req, res, next) => {
     try {
-        const { email, oldPassword, newPassword } = req.body;
+        const { oldPassword, newPassword } = req.body;
+
+        let token = req.token;
+        const result = decryptToken(token);
+        if (!result.success) {
+            return res.status(401).json({ message: result.error });
+        }
+        const { email } = result.data;
 
         // Validate input
         if (!email && !oldPassword && !newPassword) {
@@ -188,17 +183,12 @@ router.post("/reset-password", async (req, res, next) => {
             res.status(401).json({ message: "L'ancien mot de passe est incorrect" });
         }
 
-        const newHashedPassword = encryptPassword(newPassword);
+        const newHashedPassword = await encryptPassword(newPassword);
         user.password = newHashedPassword;
         await user.save();
 
         // Send response
-        res.status(200).json({
-            id: user._id,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-        });
+        res.status(200).json(toUserDto(user));
     } catch (error) {
         next(error);
     }
@@ -254,13 +244,7 @@ router.get("/me", protect, async (req, res, next) => {
             throw createError(404, "Utilisateur non trouvé");
         }
 
-        res.status(200).json({
-            id: user._id,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            role: user.role,
-        });
+        res.status(200).json(toUserDto(user));
     } catch (error) {
         next(error);
     }
@@ -285,12 +269,7 @@ router.post('/google', async (req, res) => {
             const refreshToken = generateRefreshToken(user);
 
             return res.status(200).json({
-                user: {
-                    email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    role: user.role,
-                },
+                user: toUserDto(user),
                 accessToken,
                 refreshToken,
             });
@@ -303,12 +282,7 @@ router.post('/google', async (req, res) => {
             const refreshToken = generateRefreshToken(user);
 
             return res.status(200).json({
-                user: {
-                    email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    role: user.role,
-                },
+                user: toUserDto(user),
                 accessToken,
                 refreshToken,
             });
