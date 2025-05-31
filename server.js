@@ -1,10 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const student = require('./routes/students');
-const course = require('./routes/courses');
-const grade = require('./routes/grades');
 const emailRoutes = require('./routes/email');
+const userRoutes = require('./routes/users');
+const studentRoutes = require('./routes/students');
+const courseRoutes = require('./routes/courses');
+const gradeRoutes = require('./routes/grades');
 const user = require('./routes/users');
 const process = require('process');
 const { protect } = require('./middlewares/authMiddleware')
@@ -31,41 +32,10 @@ const prefix = '/api';
 // Routes
 app.use(`${prefix}/auth`, authRoutes)
 app.use(`${prefix}/mail`, emailRoutes)
-
-app.route(prefix + '/students')
-    .get(student.getAll)
-    .post(student.create)
-
-app.route(prefix + '/students/:id')
-    .get(student.getStudentById)
-    .put(student.update)
-    .delete(student.deleteStudent);
-
-app.route(prefix + '/courses')
-    .get(course.getAll)
-    .post(course.create)
-
-app.route(prefix + '/courses/:id')
-    .put(course.update)
-    .delete(course.deleteCourse);
-
-app.route(prefix + '/grades')
-    .get(grade.getAll)
-    .post(grade.create)
-
-app.route(prefix + '/grades/:id')
-    .get(grade.getGradesByStudent)
-    .put(grade.update)
-    .delete(grade.deleteGrade);
-
-app.route(prefix + '/users')
-    .get(user.getAll)
-    .post(user.create)
-
-app.route(prefix + '/users/:id')
-    .get(user.getUserById)
-    .put(user.update)
-    .delete(user.deleteUser);
+app.use(`${prefix}/users`, userRoutes)
+app.use(`${prefix}/students`, studentRoutes)
+app.use(`${prefix}/courses`, courseRoutes)
+app.use(`${prefix}/grades`, gradeRoutes)
 
 app.use(errorMiddleware)
 
